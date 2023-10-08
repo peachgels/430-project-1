@@ -4,7 +4,7 @@ const url = require('url');
 const query = require('querystring');
 
 const htmlHandler = require('./htmlResponses.js');
-// const jsonHandler = require('./jsonResponses.js');
+// const jsonHandler = require('./jsResponses.js');
 
 const port = process.env.PORT || process.env.NODE_PORT || 3000;
 
@@ -16,7 +16,7 @@ const handleGet = (request, response, parsedUrl) => {
     htmlHandler.getIndex(request, response);
   }
   // else {
-  //     jsonHandler.notFound(request, response);
+  //     jsHandler.notFound(request, response);
   // }
 };
 
