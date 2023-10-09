@@ -11,10 +11,28 @@
 
       const content = document.querySelector('#content');
 
+      switch (response.status) {
+        case 200: //success
+          break;
+        case 201: //created
+          getDiary();
+          break;
+        case 204: //updated (no response back from server)
+          return;
+        case 400: //bad request
+          break;
+        case 404: //not found
+          break;
+        default: //any other status code
+          break;
+      }
+
       if (parse) {
         let obj = await response.json();
-        console.log(obj);
+        console.log(JSON.stringify(obj));
       }
+
+
 
       // += for content (never replace, just add)
       //create and add a custom id for diaryEntry (style in CSS as flexbox)
@@ -51,6 +69,20 @@
 
       handleResponse(response, true);
     };
+
+    const getDiary = async () => {
+      const method = "get";
+
+      let response = await fetch("/getFilms", {
+        method,
+        headers: {
+          'Accept': 'application/json'
+        },
+      });
+
+      handleResponse(response, method === 'get');
+    };
+
     const init = () => {
 
       const diaryForm = document.querySelector('#diaryForm');

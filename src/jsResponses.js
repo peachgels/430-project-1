@@ -5,13 +5,10 @@ const respondJSON = (request, response, status, object, body) => {
   const headers = {
     'Content-Type': 'application/json',
   };
-
   response.writeHead(status, headers);
-
   if (body) {
     response.write(JSON.stringify(object));
   }
-
   response.end();
 };
 
@@ -61,8 +58,6 @@ const addFilm = (request, response, body) => {
   }
 
   // if not
-  console.log(responseCode);
-  console.log(responseJSON);
   return respondJSON(request, response, responseCode, responseJSON, false);
 };
 

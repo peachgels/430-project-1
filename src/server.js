@@ -42,6 +42,8 @@ const handleGet = (request, response, parsedUrl) => {
     htmlHandler.getCSS(request, response);
   } else if (parsedUrl.pathname === '/') {
     htmlHandler.getIndex(request, response);
+  } else if (parsedUrl.pathname === '/getFilms') {
+    jsonHandler.getFilms(request, response);
   } else {
     jsonHandler.notFound(request, response);
   }
