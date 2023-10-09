@@ -1,35 +1,97 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Movie Tracker</title>
-    <link rel="stylesheet" type="text/css" href="/style.css">
-    <script>
-        
-    </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Movie Tracker</title>
+  <link rel="stylesheet" type="text/css" href="/style.css">
+  <script>
+    const handleResponse = async (response, parse) => {
+
+      const content = document.querySelector('#content');
+
+      if (parse) {
+        let obj = await response.json();
+        console.log(obj);
+      }
+
+      // += for content (never replace, just add)
+      //create and add a custom id for diaryEntry (style in CSS as flexbox)
+      //date watched (probably h2 and body text)
+      //diary entry has film poster (if no poster provided, use name)
+      //poster rollover text is film name
+      //show rating
+      //show review (if it exists)
+    };
+
+    const sendPost = async (diaryForm) => {
+
+      const filmAction = diaryForm.getAttribute('action');
+      const filmMethod = diaryForm.getAttribute('method');
+
+      //Grab all the info from the form
+      const nameField = diaryForm.querySelector('#nameField');
+      const posterField = diaryForm.querySelector('#posterField');
+      const dateField = diaryForm.querySelector('#dateField');
+      const reviewField = diaryForm.querySelector('#reviewField');
+      const ratingField = diaryForm.querySelector('#ratingField');
+
+      //Build a data string in the FORM-URLENCODED format.
+      const formData = `name=${nameField.value}&poster=${posterField.value}&date=${dateField.value}&review=${reviewField.value}&rating=${ratingField.value}`;
+
+      let response = await fetch(filmAction, {
+        method: filmMethod,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Accept': 'application/json',
+        },
+        body: formData,
+      });
+
+      handleResponse(response, true);
+    };
+    const init = () => {
+
+      const diaryForm = document.querySelector('#diaryForm');
+
+      const addFilm = (e) => {
+        e.preventDefault();
+        sendPost(diaryForm);
+        return false;
+      }
+
+      //make the buttons work
+      diaryForm.addEventListener('submit', addFilm);
+    };
+
+    window.onload = init;
+
+  </script>
 </head>
+
 <body>
-    <section id="top">
-        <h3>Movie Tracker</h3>
-        <form id="nameForm" autocomplete="off" action="/addFilm" method="post">
-          <label for="name">Film Name: </label>
-          <input id="nameField" type="text" name="name" />
-          <label for="poster">Poster</label>
-          <input id="posterField" type="url" posterLink="poster" />
-          <label for="date">Date Watched: </label>
-          <input id="dateField" type="date" name="date"/>
-          <label for="review">Review: </label>
-          <input id="reviewField" type="text" name="review" />
-          <label for="stars">Stars: </label>
-          <input id="ratingField" type="number" name="rating" min="0" max="5" step="0.5"/>
-          <input type="submit" value="Log Film" />
-        </form>
-        <!-- <form id="diaryForm" action="/showDiary" method="get">
+  <section id="top">
+    <h3>Movie Tracker</h3>
+    <form id="diaryForm" autocomplete="off" action="/addFilm" method="post">
+      <label for="name">Film Name: </label>
+      <input id="nameField" type="text" name="name" />
+      <label for="poster">Poster</label>
+      <input id="posterField" type="url" pattern="https://.*" placeholder="https://example.PNG" posterLink="poster" />
+      <label for="date">Date Watched: </label>
+      <input id="dateField" type="date" name="date" />
+      <label for="review">Review: </label>
+      <input id="reviewField" type="text" name="review" />
+      <label for="stars">Stars: </label>
+      <input id="ratingField" type="number" name="rating" min="0" max="5" step="0.5" />
+      <input type="submit" value="Log Film" />
+    </form>
+    <!-- <form id="diaryForm" action="/showDiary" method="get">
           <input type="submit" value="Show My Diary" />
         </form> -->
-      </section>
-      <section id="content">
-      </section>
+  </section>
+  <section id="content">
+  </section>
 </body>
+
 </html>
