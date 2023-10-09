@@ -29,18 +29,16 @@
 
       if (parse) {
         let obj = await response.json();
-        console.log(JSON.stringify(obj));
+        if (response.status === 200) {
+          let diary = obj.films;
+          console.log(diary);
+          for (const f in diary) {
+              const film = diary[f];
+              console.log(film);
+              console.log(`Film name: ${film.name}`);
+          }
+        }
       }
-
-
-
-      // += for content (never replace, just add)
-      //create and add a custom id for diaryEntry (style in CSS as flexbox)
-      //date watched (probably h2 and body text)
-      //diary entry has film poster (if no poster provided, use name)
-      //poster rollover text is film name
-      //show rating
-      //show review (if it exists)
     };
 
     const sendPost = async (diaryForm) => {
