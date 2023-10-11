@@ -1,0 +1,29 @@
+.entry{
+    display: flex;
+    height: 340px;
+    width: 227px;
+    background-color: grey;
+    color: rgb(48, 46, 46);
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+}
+.entry img{
+    height: 340px;
+    width: 227px;
+}
+#content{
+    display: flex;
+    margin: 25px auto;
+    gap: 25px;
+    justify-items: center;
+    align-items: center;
+    flex-flow: row wrap;
+    justify-self: center;
+    align-self: center;
+}
+html{
+    display: block;
+    max-width: 90%;
+    margin: 0 auto;
+}

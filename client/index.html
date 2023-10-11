@@ -9,8 +9,6 @@
   <script>
     const handleResponse = async (response, parse) => {
 
-      const content = document.querySelector('#content');
-
       switch (response.status) {
         case 200: //success
           break;
@@ -29,17 +27,38 @@
 
       if (parse) {
         let obj = await response.json();
-        if (response.status === 200) {
-          let diary = obj.films;
-          console.log(diary);
-          for (const f in diary) {
-              const film = diary[f];
-              console.log(film);
-              console.log(`Film name: ${film.name}`);
-          }
-        }
+        populateDiary(response, obj);
       }
     };
+
+    const populateDiary = (response, obj) => {
+      const content = document.querySelector('#content');
+      if (response.status === 200) {
+        let diary = obj.films;
+        console.log(diary);
+        content.innerHTML = "";
+        for (const f in diary) {
+          const film = diary[f];
+          //clear the current diary and repopulate
+          // += for content (never replace, just add)
+          const entry = document.createElement("div");
+          entry.classList.add('entry');
+          //create and add a custom class for diaryEntry (style in CSS as flexbox)
+          if (film.poster) {
+            entry.innerHTML = `<img src="${film.poster}" alt="Poster for ${film.name}">`
+          }
+          else {
+            entry.innerHTML = `<h2>${film.name}</h2>`;
+          }
+          //date watched (probably h2 and body text)
+          //diary entry has film poster (if no poster provided, use name)
+          //poster rollover text is film name
+          //show rating
+          //show review (if it exists)
+          content.appendChild(entry);
+        }
+      }
+    }
 
     const sendPost = async (diaryForm) => {
 
@@ -88,11 +107,12 @@
       const addFilm = (e) => {
         e.preventDefault();
         sendPost(diaryForm);
+
         return false;
       }
-
       //make the buttons work
       diaryForm.addEventListener('submit', addFilm);
+      getDiary();
     };
 
     window.onload = init;
@@ -107,13 +127,15 @@
       <label for="name">Film Name: </label>
       <input id="nameField" type="text" name="name" />
       <label for="poster">Poster</label>
-      <input id="posterField" type="url" pattern="https://.*" placeholder="https://example.PNG" posterLink="poster" />
+      <input id="posterField" type="url" pattern="https://.*" placeholder="https://example.PNG"
+        value="https://i.etsystatic.com/18242346/r/il/c9908e/2412674268/il_fullxfull.2412674268_1sgm.jpg"
+        posterLink="poster" />
       <label for="date">Date Watched: </label>
       <input id="dateField" type="date" name="date" />
       <label for="review">Review: </label>
       <input id="reviewField" type="text" name="review" />
       <label for="stars">Stars: </label>
-      <input id="ratingField" type="number" name="rating" min="0" max="5" step="0.5" />
+      <input id="ratingField" type="number" name="rating" min="0" max="5" value="5" step="0.5" />
       <input type="submit" value="Log Film" />
     </form>
     <!-- <form id="diaryForm" action="/showDiary" method="get">
