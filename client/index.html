@@ -45,10 +45,38 @@
           entry.classList.add('entry');
           //create and add a custom class for diaryEntry (style in CSS as flexbox)
           if (film.poster) {
-            entry.innerHTML = `<img src="${film.poster}" alt="Poster for ${film.name}">`
+            if (film.review) {
+              entry.innerHTML = `<div class="entry-inner"><div class="entry-front"><img src="${film.poster}" alt="Poster for ${film.name}"></div>
+            <div class="entry-back">
+              <div class="date">Watched On: ${film.date}</div>
+              <div class="stars">${film.rating}/5</div>
+              <div class="review">"${film.review}"</div>
+            </div></div>`
+            }
+            else {
+              entry.innerHTML = `<div class="entry-inner"><div class="entry-front"><img src="${film.poster}" alt="Poster for ${film.name}"></div>
+            <div class="entry-back">
+              <div class="date">Watched On: ${film.date}</div>
+              <div class="stars">${film.rating}/5</div>
+            </div></div>`
+            }
           }
           else {
-            entry.innerHTML = `<h2>${film.name}</h2>`;
+            if (film.review) {
+              entry.innerHTML = `<div class="entry-inner"><div class="entry-front"><h2>${film.name}</h2></div>
+            <div class="entry-back">
+              <div class="date">Watched On: ${film.date}</div>
+              <div class="stars">${film.rating}/5</div>
+              <div class="review">"${film.review}"</div>
+            </div></div>`
+            }
+            else {
+              entry.innerHTML = `<div class="entry-inner"><div class="entry-front"><h2>${film.name}</h2></div>
+            <div class="entry-back">
+              <div class="date">Watched On: ${film.date}</div>
+              <div class="stars">${film.rating}/5</div>
+            </div></div>`
+            }
           }
           //date watched (probably h2 and body text)
           //diary entry has film poster (if no poster provided, use name)
@@ -112,6 +140,8 @@
       }
       //make the buttons work
       diaryForm.addEventListener('submit', addFilm);
+
+      //on refresh, keep stored items on page
       getDiary();
     };
 
@@ -122,7 +152,7 @@
 
 <body>
   <section id="top">
-    <h3>Movie Tracker</h3>
+    <h1>Movie Tracker</h1>
     <form id="diaryForm" autocomplete="off" action="/addFilm" method="post">
       <label for="name">Film Name: </label>
       <input id="nameField" type="text" name="name" />
@@ -136,11 +166,9 @@
       <input id="reviewField" type="text" name="review" />
       <label for="stars">Stars: </label>
       <input id="ratingField" type="number" name="rating" min="0" max="5" value="5" step="0.5" />
+      <hr>
       <input type="submit" value="Log Film" />
     </form>
-    <!-- <form id="diaryForm" action="/showDiary" method="get">
-          <input type="submit" value="Show My Diary" />
-        </form> -->
   </section>
   <section id="content">
   </section>
