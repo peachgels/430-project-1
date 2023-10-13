@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
+
 .entry {
     display: flex;
     height: 340px;
@@ -54,10 +56,22 @@ https://www.w3schools.com/howto/howto_css_flip_card.asp */
     color: rgb(32, 30, 30);
     justify-content: space-around;
     flex-flow: column nowrap;
+    padding: 5px;
 }
 
 .entry-back .review {
     padding: 10px;
+    display: block; 
+    margin-top: 1em; 
+    margin-bottom: 1em; 
+    margin-left: 0; 
+    margin-right: 0;
+    overflow: auto;
+}
+.entry-back .stars{
+    font-weight: bold;
+    font-size: large;
+    padding: 1em;
 }
 
 #content {
@@ -81,9 +95,16 @@ h1 {
     margin: auto;
     text-align: center;
 }
+input{
+    background-color: rgb(60, 60, 60);
+    color: rgb(155, 143, 160);
+}
 
 html {
     display: block;
     max-width: 90%;
     margin: auto;
+    background-color: rgb(95, 95, 95);
+    color: rgb(33, 33, 33);
+    font-family: 'Montserrat', sans-serif;
 }
