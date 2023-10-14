@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&family=Rammetto+One&display=swap');
 
 .entry {
     display: flex;
@@ -29,6 +29,9 @@ https://www.w3schools.com/howto/howto_css_flip_card.asp */
 
 .entry:hover .entry-inner {
     transform: rotateY(180deg);
+    height: 340px;
+    width: 227px;
+
 }
 
 .entry-front,
@@ -51,34 +54,53 @@ https://www.w3schools.com/howto/howto_css_flip_card.asp */
 }
 
 .entry-back {
-    background-color: grey;
+    /* background-color: rgb(23, 22, 22); */
     transform: rotateY(180deg);
-    color: rgb(32, 30, 30);
-    justify-content: space-around;
+    color: rgb(234, 224, 224);
+    justify-content: center;
+    align-items: center;
     flex-flow: column nowrap;
-    padding: 5px;
+    max-height: 340px;
+    max-width: 227px;
+    overflow: hidden;
+}
+
+.entry-back img {
+    display: flex;
+    pointer-events: none;
+    position: absolute;
+    height: 360px;
+    width: 247px;
+    align-items: center;
+    justify-self: center;
+    z-index: -1;
+    filter: blur(5px) brightness(30%);
+    transform: rotateY(180deg);
 }
 
 .entry-back .review {
     padding: 10px;
-    display: block; 
-    margin-top: 1em; 
-    margin-bottom: 1em; 
-    margin-left: 0; 
-    margin-right: 0;
+    display: block;
+    max-width: 90%;
     overflow: auto;
 }
-.entry-back .stars{
+
+.entry-back .stars {
     font-weight: bold;
     font-size: large;
     padding: 1em;
+}
+
+.entry-back .date {
+    font-weight: bold;
+    padding-top: 5px;
 }
 
 #content {
     display: flex;
     margin: 25px auto;
     gap: 25px;
-    justify-items: center;
+    justify-content: flex-start;
     align-items: center;
     flex-flow: row wrap;
     justify-self: center;
@@ -87,24 +109,74 @@ https://www.w3schools.com/howto/howto_css_flip_card.asp */
 
 h1 {
     text-align: center;
-    font-size: xx-large;
+    font-size: 50px;
+    font-family: 'Rammetto One', serif;
+}
+
+input[type="submit" i] {
+    font-family: 'Rammetto One', serif;
+    font-size: 18px;
+    padding: 10px;
+    width: 100px;
+    background-color: rgb(240, 209, 128);
+    color: rgb(101, 58, 18);
+
 }
 
 #diaryForm {
     display: block;
     margin: auto;
     text-align: center;
+    font-size: 20px;
+    justify-items: center;
 }
-input{
+
+input {
     background-color: rgb(60, 60, 60);
-    color: rgb(155, 143, 160);
+    color: rgb(213, 208, 196);
+    border: 0px;
+    border-radius: 5px;
+    transition: all 0.3s ease-in;
+
+}
+
+input:hover,
+input:focus {
+    outline: none;
+    border-color: rgb(255, 255, 255);
+    box-shadow: 0px 0px 6px rgb(255, 255, 255);
 }
 
 html {
     display: block;
     max-width: 90%;
     margin: auto;
-    background-color: rgb(95, 95, 95);
-    color: rgb(33, 33, 33);
+    background-color: rgb(35, 33, 36);
+    color: rgb(213, 208, 196);
     font-family: 'Montserrat', sans-serif;
+    cursor: url('customcursor.png'), auto;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0);
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #7c7c7c;
+    border-radius: 5px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #c8c8c8;
+}
+
+hr {
+    border: 1px solid #a1a1a1;
 }

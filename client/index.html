@@ -18,6 +18,8 @@
         case 204: //updated (no response back from server)
           return;
         case 400: //bad request
+          let obj = await response.json();
+          alert(obj.message);
           break;
         case 404: //not found
           break;
@@ -44,45 +46,23 @@
           const entry = document.createElement("div");
           entry.classList.add('entry');
           //create and add a custom class for diaryEntry (style in CSS as flexbox)
-          if (film.poster) {
-            if (film.review) {
-              entry.innerHTML = `<div class="entry-inner"><div class="entry-front"><img src="${film.poster}" alt="Poster for ${film.name}"></div>
+          if (film.review) {
+            entry.innerHTML = `<div class="entry-inner"><div class="entry-front"><img src="${film.poster}" alt="Poster for ${film.name}"></div>
             <div class="entry-back">
+              <img src="${film.poster}" alt="Poster for ${film.name}">
               <div class="date">Watched On: ${film.date}</div>
               <div class="stars">${film.rating}/5</div>
               <div class="review">"${film.review}"</div>
             </div></div>`
-            }
-            else {
-              entry.innerHTML = `<div class="entry-inner"><div class="entry-front"><img src="${film.poster}" alt="Poster for ${film.name}"></div>
-            <div class="entry-back">
-              <div class="date">Watched On: ${film.date}</div>
-              <div class="stars">${film.rating}/5</div>
-            </div></div>`
-            }
           }
           else {
-            if (film.review) {
-              entry.innerHTML = `<div class="entry-inner"><div class="entry-front"><h2>${film.name}</h2></div>
+            entry.innerHTML = `<div class="entry-inner"><div class="entry-front"><img src="${film.poster}" alt="Poster for ${film.name}"></div>
             <div class="entry-back">
-              <div class="date">Watched On: ${film.date}</div>
-              <div class="stars">${film.rating}/5</div>
-              <div class="review">"${film.review}"</div>
-            </div></div>`
-            }
-            else {
-              entry.innerHTML = `<div class="entry-inner"><div class="entry-front"><h2>${film.name}</h2></div>
-            <div class="entry-back">
+              <img src="${film.poster}" alt="Poster for ${film.name}">
               <div class="date">Watched On: ${film.date}</div>
               <div class="stars">${film.rating}/5</div>
             </div></div>`
-            }
           }
-          //date watched (probably h2 and body text)
-          //diary entry has film poster (if no poster provided, use name)
-          //poster rollover text is film name
-          //show rating
-          //show review (if it exists)
           content.appendChild(entry);
         }
       }
@@ -93,15 +73,53 @@
       const filmAction = diaryForm.getAttribute('action');
       const filmMethod = diaryForm.getAttribute('method');
 
-      //Grab all the info from the form
       const nameField = diaryForm.querySelector('#nameField');
-      const posterField = diaryForm.querySelector('#posterField');
+      let movieName = nameField.value;
+      movieName = movieName.trim();
+      movieName = encodeURIComponent(movieName);
+
+      let url = 'https://api.themoviedb.org/3/search/movie?';
+      const apiKey = "94b9bc024c9c0f21cf33946731fe3cef";
+      url += "api_key=" + apiKey;
+      url += "&query=" + movieName;
+      url += "&include_adult=false&page=1"
+
+      const options = {
+        method: 'GET',
+        headers: {
+          accept: 'application/json',
+          Authorization: 'Bearer 94b9bc024c9c0f21cf33946731fe3cef'
+        }
+      };
+
+      let poster;
+      await fetch(url, options)
+        .then(res => res.json())
+        .then(json => {
+          console.log(json)
+          for (let i = 0; i < json.results.length; i++) {
+            if (json.results[i].title === nameField.value) {
+              poster = json.results[i].poster_path;
+              break;
+            }
+            else{
+              poster = json.results[0].poster_path;
+            }
+          }
+        })
+        .catch(err => console.error('error:' + err));
+
+      //Grab all the info from the form
+
+      //const posterField = diaryForm.querySelector('#posterField');
       const dateField = diaryForm.querySelector('#dateField');
       const reviewField = diaryForm.querySelector('#reviewField');
       const ratingField = diaryForm.querySelector('#ratingField');
+      let posterURL = "https://image.tmdb.org/t/p/original"
+      posterURL += poster;
 
       //Build a data string in the FORM-URLENCODED format.
-      const formData = `name=${nameField.value}&poster=${posterField.value}&date=${dateField.value}&review=${reviewField.value}&rating=${ratingField.value}`;
+      const formData = `name=${nameField.value}&poster=${posterURL}&date=${dateField.value}&review=${reviewField.value}&rating=${ratingField.value}`;
 
       let response = await fetch(filmAction, {
         method: filmMethod,
@@ -156,22 +174,19 @@
     <form id="diaryForm" autocomplete="off" action="/addFilm" method="post">
       <label for="name">Film Name: </label>
       <input id="nameField" type="text" name="name" />
-      <label for="poster">Poster</label>
-      <input id="posterField" type="url" pattern="https://.*" placeholder="https://example.PNG"
-        value="https://i.etsystatic.com/18242346/r/il/c9908e/2412674268/il_fullxfull.2412674268_1sgm.jpg"
-        posterLink="poster" />
       <label for="date">Date Watched: </label>
       <input id="dateField" type="date" name="date" />
       <label for="review">Review: </label>
       <input id="reviewField" type="text" name="review" />
       <label for="stars">Stars: </label>
-      <input id="ratingField" type="number" name="rating" min="0" max="5" value="5" step="0.5" />
+      <input id="ratingField" type="number" name="rating" min="0" max="5" step="0.5" />
       <hr>
-      <input type="submit" value="Log Film" />
+      <input type="submit" value="Log" />
     </form>
   </section>
   <section id="content">
   </section>
+</div>
 </body>
 
 </html>
