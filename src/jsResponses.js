@@ -13,14 +13,26 @@ const respondJSON = (request, response, status, object, body) => {
 };
 
 // head and get request handler
-const getFilms = (request, response, type) => {
+const getFilms = (request, response, type, params) => {
   if (type === 'head') {
     return respondJSON(request, response, 200, 'null', false);
   }
-  const responseJSON = {
+  let responseJSON = {
     films,
   };
-
+  if (params.sort === 'containsReview') {
+    const films2 = {};
+    const filmKeys = Object.keys(films);
+    for (let i = 0; i < filmKeys.length; i++) {
+      const entry = films[filmKeys[i]];
+      if (entry.review) {
+        films2[entry.name] = films[entry.name];
+      }
+    }
+    responseJSON = {
+      films2,
+    };
+  }
   return respondJSON(request, response, 200, responseJSON, true);
 };
 

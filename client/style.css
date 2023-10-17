@@ -131,7 +131,7 @@ input[type="submit" i] {
     justify-items: center;
 }
 
-input {
+input, select {
     background-color: rgb(60, 60, 60);
     color: rgb(213, 208, 196);
     border: 0px;
@@ -154,7 +154,6 @@ html {
     background-color: rgb(35, 33, 36);
     color: rgb(213, 208, 196);
     font-family: 'Montserrat', sans-serif;
-    cursor: url('customcursor.png'), auto;
 }
 
 ::-webkit-scrollbar {

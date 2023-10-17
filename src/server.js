@@ -26,7 +26,6 @@ const parseBody = (request, response, handler) => {
   request.on('end', () => {
     const bodyString = Buffer.concat(body).toString();
     const bodyParams = query.parse(bodyString);
-
     handler(request, response, bodyParams);
   });
 };
@@ -36,14 +35,14 @@ const handlePost = (request, response, parsedUrl) => {
     parseBody(request, response, jsonHandler.addFilm);
   }
 };
-const handleGet = (request, response, parsedUrl) => {
+const handleGet = (request, response, parsedUrl, params) => {
   // route to correct method based on url
   if (parsedUrl.pathname === '/style.css') {
     htmlHandler.getCSS(request, response);
   } else if (parsedUrl.pathname === '/') {
     htmlHandler.getIndex(request, response);
   } else if (parsedUrl.pathname === '/getFilms') {
-    jsonHandler.getFilms(request, response);
+    jsonHandler.getFilms(request, response, 'get', params);
   } else {
     jsonHandler.notFound(request, response);
   }
@@ -51,13 +50,14 @@ const handleGet = (request, response, parsedUrl) => {
 
 const onRequest = (request, response) => {
   const parsedUrl = url.parse(request.url);
+  const params = query.parse(parsedUrl.query);
 
   // checks handlers
   if (request.method === 'POST') {
     handlePost(request, response, parsedUrl);
   }
   if (request.method === 'GET') {
-    handleGet(request, response, parsedUrl);
+    handleGet(request, response, parsedUrl, params);
   }
   // else if (request.method === 'HEAD') {
   //     handleHead(request, response, parsedUrl);

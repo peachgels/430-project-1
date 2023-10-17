@@ -35,13 +35,16 @@
 
     const populateDiary = (response, obj) => {
       const content = document.querySelector('#content');
+      console.log(response.url);
+      //clear the current diary and repopulate
+      content.innerHTML = "";
       if (response.status === 200) {
         let diary = obj.films;
-        console.log(diary);
-        content.innerHTML = "";
+        if (response.url === "http://localhost:3000/getFilms?sort=containsReview") {
+          diary = obj.films2;
+        }
         for (const f in diary) {
           const film = diary[f];
-          //clear the current diary and repopulate
           // += for content (never replace, just add)
           const entry = document.createElement("div");
           entry.classList.add('entry');
@@ -102,7 +105,7 @@
               poster = json.results[i].poster_path;
               break;
             }
-            else{
+            else {
               poster = json.results[0].poster_path;
             }
           }
@@ -134,9 +137,10 @@
     };
 
     const getDiary = async () => {
+      const queryParam = document.querySelector('#sortBy').value;
+      console.log(queryParam);
       const method = "get";
-
-      let response = await fetch("/getFilms", {
+      let response = await fetch(`/getFilms?sort=${queryParam}`, {
         method,
         headers: {
           'Accept': 'application/json'
@@ -149,6 +153,7 @@
     const init = () => {
 
       const diaryForm = document.querySelector('#diaryForm');
+      const sortByDropdown = document.querySelector('#sortBy');
 
       const addFilm = (e) => {
         e.preventDefault();
@@ -158,6 +163,7 @@
       }
       //make the buttons work
       diaryForm.addEventListener('submit', addFilm);
+      sortByDropdown.addEventListener('change', getDiary)
 
       //on refresh, keep stored items on page
       getDiary();
@@ -180,13 +186,18 @@
       <input id="reviewField" type="text" name="review" />
       <label for="stars">Stars: </label>
       <input id="ratingField" type="number" name="rating" min="0" max="5" step="0.5" />
+      <label for="sortDropdown">Show: </label>
+      <select name="sortBy" id="sortBy">
+        <option value="all">All</option>
+        <option value="containsReview">Entries with Reviews</option>
+      </select>
       <hr>
       <input type="submit" value="Log" />
     </form>
   </section>
   <section id="content">
   </section>
-</div>
+  </div>
 </body>
 
 </html>
