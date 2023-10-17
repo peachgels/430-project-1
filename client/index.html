@@ -13,11 +13,13 @@
         case 200: //success
           break;
         case 201: //created
+          //make a get request following a successful post request to update front-end right away
           getDiary();
           break;
-        case 204: //updated (no response back from server)
+        case 204: //updated
           return;
         case 400: //bad request
+          //tell the user via DOM alert
           let obj = await response.json();
           alert(obj.message);
           break;
@@ -29,26 +31,33 @@
 
       if (parse) {
         let obj = await response.json();
+
+        //update front end
         populateDiary(response, obj);
       }
     };
 
+    //function to populate the front end
     const populateDiary = (response, obj) => {
       const content = document.querySelector('#content');
-      console.log(response.url);
       //clear the current diary and repopulate
       content.innerHTML = "";
+      //if get request is successful
       if (response.status === 200) {
         let diary = obj.films;
+        //query param support for front end (this also works directly from browser)
         if (response.url === "http://localhost:3000/getFilms?sort=containsReview") {
+          //separate array containing only films w reviews
           diary = obj.films2;
         }
+        //iterate over the list
         for (const f in diary) {
+          //grab every film
           const film = diary[f];
           // += for content (never replace, just add)
           const entry = document.createElement("div");
           entry.classList.add('entry');
-          //create and add a custom class for diaryEntry (style in CSS as flexbox)
+          //create and add a custom class for diaryEntry (styled in CSS as flexbox)
           if (film.review) {
             entry.innerHTML = `<div class="entry-inner"><div class="entry-front"><img src="${film.poster}" alt="Poster for ${film.name}"></div>
             <div class="entry-back">
@@ -71,11 +80,14 @@
       }
     }
 
+    //sends post requests from client
     const sendPost = async (diaryForm) => {
 
       const filmAction = diaryForm.getAttribute('action');
       const filmMethod = diaryForm.getAttribute('method');
 
+
+      //external support from TMDB API
       const nameField = diaryForm.querySelector('#nameField');
       let movieName = nameField.value;
       movieName = movieName.trim();
@@ -84,7 +96,9 @@
       let url = 'https://api.themoviedb.org/3/search/movie?';
       const apiKey = "94b9bc024c9c0f21cf33946731fe3cef";
       url += "api_key=" + apiKey;
+      //use user inputted film name as search query
       url += "&query=" + movieName;
+      //no porn
       url += "&include_adult=false&page=1"
 
       const options = {
@@ -99,12 +113,15 @@
       await fetch(url, options)
         .then(res => res.json())
         .then(json => {
-          console.log(json)
+          //look through the results
           for (let i = 0; i < json.results.length; i++) {
+            //if the film title is an exact match, prioritize that
+            //(this is because sometimes sequels would come up as the first result)
             if (json.results[i].title === nameField.value) {
               poster = json.results[i].poster_path;
               break;
             }
+            //otherwise, just grab the first result
             else {
               poster = json.results[0].poster_path;
             }
@@ -113,15 +130,14 @@
         .catch(err => console.error('error:' + err));
 
       //Grab all the info from the form
-
-      //const posterField = diaryForm.querySelector('#posterField');
       const dateField = diaryForm.querySelector('#dateField');
       const reviewField = diaryForm.querySelector('#reviewField');
       const ratingField = diaryForm.querySelector('#ratingField');
+      //use the poster url gotten from the TMDB fetch request
       let posterURL = "https://image.tmdb.org/t/p/original"
       posterURL += poster;
 
-      //Build a data string in the FORM-URLENCODED format.
+      //Build a data string in the FORM-URLENCODED format
       const formData = `name=${nameField.value}&poster=${posterURL}&date=${dateField.value}&review=${reviewField.value}&rating=${ratingField.value}`;
 
       let response = await fetch(filmAction, {
@@ -136,9 +152,9 @@
       handleResponse(response, true);
     };
 
+    //get request for the diary (with param support based on dropdown)
     const getDiary = async () => {
       const queryParam = document.querySelector('#sortBy').value;
-      console.log(queryParam);
       const method = "get";
       let response = await fetch(`/getFilms?sort=${queryParam}`, {
         method,
@@ -151,10 +167,11 @@
     };
 
     const init = () => {
-
+      //grab references to the form
       const diaryForm = document.querySelector('#diaryForm');
       const sortByDropdown = document.querySelector('#sortBy');
 
+      //log a film
       const addFilm = (e) => {
         e.preventDefault();
         sendPost(diaryForm);

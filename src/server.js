@@ -29,12 +29,16 @@ const parseBody = (request, response, handler) => {
     handler(request, response, bodyParams);
   });
 };
+//end borrowed code
 
+//handles post requests
 const handlePost = (request, response, parsedUrl) => {
   if (parsedUrl.pathname === '/addFilm') {
     parseBody(request, response, jsonHandler.addFilm);
   }
 };
+
+//handles get requests w query param support
 const handleGet = (request, response, parsedUrl, params) => {
   // route to correct method based on url
   if (parsedUrl.pathname === '/style.css') {
@@ -48,6 +52,14 @@ const handleGet = (request, response, parsedUrl, params) => {
   }
 };
 
+const handleHead = (request, response, parsedUrl, params) => {
+  if (parsedUrl.pathname === '/getFilms') {
+    jsonHandler.getFilms(request, response, 'head', params);
+  } else {
+    jsonHandler.notFound(request, response);
+  }
+}
+
 const onRequest = (request, response) => {
   const parsedUrl = url.parse(request.url);
   const params = query.parse(parsedUrl.query);
@@ -59,9 +71,9 @@ const onRequest = (request, response) => {
   if (request.method === 'GET') {
     handleGet(request, response, parsedUrl, params);
   }
-  // else if (request.method === 'HEAD') {
-  //     handleHead(request, response, parsedUrl);
-  // }
+  else if (request.method === 'HEAD') {
+      handleHead(request, response, parsedUrl);
+  }
 };
 
 http.createServer(onRequest).listen(port, () => {
