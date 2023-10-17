@@ -20,14 +20,14 @@ const getFilms = (request, response, type, params) => {
   let responseJSON = {
     films,
   };
-  //returns a separate array if user only wants entries with reviews (query param)
+  // returns a separate array if user only wants entries with reviews (query param)
   if (params.sort === 'containsReview') {
     const films2 = {};
-    //make array from object
+    // make array from object
     const filmKeys = Object.keys(films);
     for (let i = 0; i < filmKeys.length; i++) {
       const entry = films[filmKeys[i]];
-      //if a review exists, add it to the new array
+      // if a review exists, add it to the new array
       if (entry.review) {
         films2[entry.name] = films[entry.name];
       }
@@ -39,7 +39,7 @@ const getFilms = (request, response, type, params) => {
   return respondJSON(request, response, 200, responseJSON, true);
 };
 
-//post request
+// post request
 const addFilm = (request, response, body) => {
   const responseJSON = {
     message: 'Please enter a film name, date, and rating.',
