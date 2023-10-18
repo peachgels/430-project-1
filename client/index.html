@@ -46,7 +46,7 @@
       if (response.status === 200) {
         let diary = obj.films;
         //query param support for front end (this also works directly from browser)
-        if (response.url === "http://localhost:3000/getFilms?sort=containsReview") {
+        if (obj.films2) {
           //separate array containing only films w reviews
           diary = obj.films2;
         }
@@ -94,8 +94,9 @@
       movieName = encodeURIComponent(movieName);
 
       let url = 'https://api.themoviedb.org/3/search/movie?';
-      const apiKey = "94b9bc024c9c0f21cf33946731fe3cef";
+      const apiKey = '94b9bc024c9c0f21cf33946731fe3cef';
       url += "api_key=" + apiKey;
+      
       //use user inputted film name as search query
       url += "&query=" + movieName;
       //no porn
@@ -105,7 +106,7 @@
         method: 'GET',
         headers: {
           accept: 'application/json',
-          Authorization: 'Bearer 94b9bc024c9c0f21cf33946731fe3cef'
+          Authorization: `Bearer ${apiKey}`
         }
       };
 

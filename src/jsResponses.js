@@ -14,6 +14,7 @@ const respondJSON = (request, response, status, object, body) => {
 
 // head and get request handler
 const getFilms = (request, response, type, params) => {
+  const films2 = {}
   if (type === 'head') {
     return respondJSON(request, response, 200, 'null', false);
   }
@@ -22,7 +23,6 @@ const getFilms = (request, response, type, params) => {
   };
   // returns a separate array if user only wants entries with reviews (query param)
   if (params.sort === 'containsReview') {
-    const films2 = {};
     // make array from object
     const filmKeys = Object.keys(films);
     for (let i = 0; i < filmKeys.length; i++) {
